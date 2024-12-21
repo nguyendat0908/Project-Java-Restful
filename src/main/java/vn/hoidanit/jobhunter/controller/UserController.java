@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 public class UserController {
@@ -31,8 +31,6 @@ public class UserController {
     public User getUserById(@PathVariable("id") long id) {
         return this.userService.getUserById(id);
     }
-    
-    
 
     @PostMapping("/user")
     public User createNewUser(@RequestBody User user) {
@@ -48,5 +46,10 @@ public class UserController {
         this.userService.deleteUserById(id);
 
         return "Success!";
+    }
+
+    @PutMapping("/user")
+    public User updateUser(@RequestBody User user) {
+        return this.userService.updateUser(user);
     }
 }

@@ -1,6 +1,7 @@
 package vn.hoidanit.jobhunter.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,24 @@ public class UserService {
     }
 
     public User getUserById(long id){
-        return this.userRepository.findById(id);
+        Optional<User> userOptional = this.userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        }
+        return null;
     }
 
     public List<User> getAllUsers(){
         return this.userRepository.findAll();
+    }
+    public User updateUser(User user){
+
+        User userOptional = this.getUserById(user.getId());
+        
+            userOptional.setEmail(user.getEmail());
+            userOptional.setName(user.getName());
+            userOptional.setPassword(user.getPassword());
+
+            return this.userRepository.save(userOptional);
     }
 }
