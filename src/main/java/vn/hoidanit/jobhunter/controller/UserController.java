@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.hoidanit.jobhunter.domain.User;
+import vn.hoidanit.jobhunter.error.IdInvalidException;
 import vn.hoidanit.jobhunter.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,7 +44,11 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
+
+        if (id >= 1500) {
+            throw new IdInvalidException("Id khong lon hon 1500");
+        }
 
         this.userService.deleteUserById(id);
 
