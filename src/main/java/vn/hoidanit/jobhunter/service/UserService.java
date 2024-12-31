@@ -46,4 +46,8 @@ public class UserService {
 
             return this.userRepository.save(userOptional);
     }
+
+    public User handleGetUserByUsername(String ussername){
+        return this.userRepository.findByEmail(ussername);
+    }
 }
