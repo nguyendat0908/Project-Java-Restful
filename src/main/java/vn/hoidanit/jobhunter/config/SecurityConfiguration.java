@@ -24,6 +24,7 @@ public class SecurityConfiguration {
                 auth -> auth
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated())
+                        .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
