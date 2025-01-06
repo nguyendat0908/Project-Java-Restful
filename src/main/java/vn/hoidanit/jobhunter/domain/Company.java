@@ -1,5 +1,8 @@
 package vn.hoidanit.jobhunter.domain;
 
+import java.time.Instant;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,16 +12,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
-@Setter
+@Table(name = "companies")
 @Getter
-public class User {
+@Setter
+public class Company {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String name;
-    private String email;
-    private String password;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String description;
+
+    private String address;
+    private String logo;
+
+    private Instant createAt;
+    private Instant updateAt;
+
+    private String createdBy;
+    private String updateBy;
 
 }
