@@ -8,9 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.DTO.Meta;
+import vn.hoidanit.jobhunter.domain.DTO.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.DTO.ResUpdateUserDTO;
+import vn.hoidanit.jobhunter.domain.DTO.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.DTO.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
@@ -68,5 +70,52 @@ public class UserService {
 
     public User handleGetUserByUsername(String username) {
         return this.userRepository.findByEmail(username);
+    }
+
+    public boolean checkExistEmail(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public ResUserDTO convertUserToResUserDTO(User user) {
+        ResUserDTO resUserDTO = new ResUserDTO();
+
+        resUserDTO.setId(user.getId());
+        resUserDTO.setAge(user.getAge());
+        resUserDTO.setName(user.getName());
+        resUserDTO.setEmail(user.getEmail());
+        resUserDTO.setAddress(user.getAddress());
+        resUserDTO.setGender(user.getGender());
+        resUserDTO.setCreatedBy(user.getCreatedAt());
+        resUserDTO.setUpdatedBy(user.getUpdatedAt());
+
+        return resUserDTO;
+    }
+
+    public ResCreateUserDTO convertUserToResCreateUserDTO(User user) {
+        ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
+
+        resCreateUserDTO.setId(user.getId());
+        resCreateUserDTO.setAge(user.getAge());
+        resCreateUserDTO.setName(user.getName());
+        resCreateUserDTO.setEmail(user.getEmail());
+        resCreateUserDTO.setAddress(user.getAddress());
+        resCreateUserDTO.setGender(user.getGender());
+        resCreateUserDTO.setCreatedBy(user.getCreatedAt());
+
+        return resCreateUserDTO;
+    }
+
+    public ResUpdateUserDTO convertUserToResUpdateUserDTO(User user) {
+        ResUpdateUserDTO resUpdateUserDTO = new ResUpdateUserDTO();
+
+        resUpdateUserDTO.setId(user.getId());
+        resUpdateUserDTO.setAge(user.getAge());
+        resUpdateUserDTO.setName(user.getName());
+        resUpdateUserDTO.setEmail(user.getEmail());
+        resUpdateUserDTO.setAddress(user.getAddress());
+        resUpdateUserDTO.setGender(user.getGender());
+        resUpdateUserDTO.setUpdateAt(user.getUpdatedAt());
+
+        return resUpdateUserDTO;
     }
 }

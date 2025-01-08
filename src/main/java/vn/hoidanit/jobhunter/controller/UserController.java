@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
+import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
+import vn.hoidanit.jobhunter.domain.DTO.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.DTO.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
@@ -35,6 +37,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Get all users
     @GetMapping("/users")
     @ApiMessage("Get all users")
     public ResponseEntity<ResultPaginationDTO> getAllUser(@Filter Specification<User> spec, Pageable pageable) {
@@ -42,22 +45,32 @@ public class UserController {
         return ResponseEntity.ok(this.userService.getAllUsers(spec, pageable));
     }
 
+    // Get user by id
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         return ResponseEntity.ok(this.userService.getUserById(id));
     }
 
+    // Create new user  
     @PostMapping("/users")
-    public ResponseEntity<User> createNewUser(@RequestBody User user) {
+    @ApiMessage("Create a new user")
+    public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User user) throws IdInvalidException {
+
+        boolean isExist = this.userService.checkExistEmail(user.getEmail());
+
+        if (isExist) {
+            throw new IdInvalidException("Email " + user.getEmail() + " đã tồn tại. Vui lòng sử dụng email khác!");
+        }
 
         String hashPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
 
-        User newUsesr = this.userService.handleSaveUser(user);
+        User newUser = this.userService.handleSaveUser(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUsesr);
+        return ResponseEntity.ok(this.userService.convertUserToResCreateUserDTO(newUser));
     }
 
+    // Delete user by id
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
 
@@ -70,6 +83,7 @@ public class UserController {
         return ResponseEntity.ok("Success!");
     }
 
+    // Update user
     @PutMapping("/users")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         return ResponseEntity.ok(this.userService.updateUser(user));

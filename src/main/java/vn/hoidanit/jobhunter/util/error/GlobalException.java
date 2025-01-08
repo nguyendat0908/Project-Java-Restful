@@ -1,5 +1,6 @@
 package vn.hoidanit.jobhunter.util.error;
 
+import java.io.InvalidClassException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,8 @@ import vn.hoidanit.jobhunter.domain.RestResponse;
 @RestControllerAdvice
 public class GlobalException {
 
-    @ExceptionHandler(value = {UsernameNotFoundException.class, BadCredentialsException.class})
+    @ExceptionHandler(value = { UsernameNotFoundException.class, BadCredentialsException.class,
+            IdInvalidException.class })
 
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
 
