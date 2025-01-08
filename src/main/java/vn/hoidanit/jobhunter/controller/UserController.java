@@ -17,6 +17,8 @@ import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.DTO.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.DTO.ResUpdateUserDTO;
+import vn.hoidanit.jobhunter.domain.DTO.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.DTO.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
@@ -47,11 +49,18 @@ public class UserController {
 
     // Get user by id
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
-        return ResponseEntity.ok(this.userService.getUserById(id));
+    @ApiMessage("Get a user by ID")
+    public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") long id) throws IdInvalidException {
+
+        User user = this.userService.getUserById(id);
+        if (user == null) {
+            throw new IdInvalidException("User " + id + " không tồn tại!");
+        }
+
+        return ResponseEntity.ok(this.userService.convertUserToResUserDTO(user));
     }
 
-    // Create new user  
+    // Create new user
     @PostMapping("/users")
     @ApiMessage("Create a new user")
     public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User user) throws IdInvalidException {
@@ -72,20 +81,29 @@ public class UserController {
 
     // Delete user by id
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
 
-        if (id >= 1500) {
-            throw new IdInvalidException("Id khong lon hon 1500");
+        User user = this.userService.getUserById(id);
+        if (user == null) {
+            throw new IdInvalidException("User " + id + " không tồn tại!");
         }
 
         this.userService.deleteUserById(id);
 
-        return ResponseEntity.ok("Success!");
+        return ResponseEntity.ok(null);
     }
 
     // Update user
     @PutMapping("/users")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return ResponseEntity.ok(this.userService.updateUser(user));
+    @ApiMessage("Update a user")
+    public ResponseEntity<ResUpdateUserDTO> updateUser(@RequestBody User user) throws IdInvalidException {
+
+        User userOptional = this.userService.updateUser(user);
+
+        if (userOptional == null) {
+            throw new IdInvalidException("User " + user.getId() + " không tồn tại!");
+        }
+
+        return ResponseEntity.ok(this.userService.convertUserToResUpdateUserDTO(userOptional));
     }
 }

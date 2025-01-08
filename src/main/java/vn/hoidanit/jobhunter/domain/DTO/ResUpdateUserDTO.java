@@ -9,13 +9,12 @@ import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 @Getter
 @Setter
 public class ResUpdateUserDTO {
-    
+
     private long id;
 
     private int age;
 
     private String name;
-    private String email;
     private String address;
 
     private GenderEnum gender;

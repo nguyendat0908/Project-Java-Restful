@@ -2,6 +2,7 @@ package vn.hoidanit.jobhunter.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +26,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    // Create new user
     public User handleSaveUser(User user) {
         return this.userRepository.save(user);
     }
 
+    // Delete user by id
     public void deleteUserById(long id) {
         this.userRepository.deleteById(id);
     }
 
+    // Get user by id
     public User getUserById(long id) {
         Optional<User> userOptional = this.userRepository.findById(id);
         if (userOptional.isPresent()) {
@@ -41,6 +45,7 @@ public class UserService {
         return null;
     }
 
+    // Get all users
     public ResultPaginationDTO getAllUsers(Specification<User> spec, Pageable pageable) {
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
@@ -52,30 +57,52 @@ public class UserService {
         meta.setTotal(pageUser.getTotalElements());
 
         resultPaginationDTO.setMeta(meta);
-        resultPaginationDTO.setResult(pageUser.getContent());
+
+        List<ResUserDTO> listUser = pageUser.getContent()
+                .stream().map(item -> new ResUserDTO(
+                        item.getId(),
+                        item.getAge(),
+                        item.getName(),
+                        item.getEmail(),
+                        item.getAddress(),
+                        item.getGender(),
+                        item.getCreatedAt(),
+                        item.getUpdatedAt()))
+                .collect(Collectors.toList());
+
+        resultPaginationDTO.setResult(listUser);
 
         return resultPaginationDTO;
     }
 
+    // Update user
     public User updateUser(User user) {
 
         User userOptional = this.getUserById(user.getId());
 
-        userOptional.setEmail(user.getEmail());
-        userOptional.setName(user.getName());
-        userOptional.setPassword(user.getPassword());
+        if (userOptional != null) {
+            userOptional.setAge(user.getAge());
+            userOptional.setAddress(user.getAddress());
+            userOptional.setName(user.getName());
+            userOptional.setGender(user.getGender());
 
-        return this.userRepository.save(userOptional);
+            this.userRepository.save(userOptional);
+        }
+
+        return userOptional;
     }
 
+    // Get user by username
     public User handleGetUserByUsername(String username) {
         return this.userRepository.findByEmail(username);
     }
 
+    // Check exist email
     public boolean checkExistEmail(String email) {
         return this.userRepository.existsByEmail(email);
     }
 
+    // Convert user to response DTO
     public ResUserDTO convertUserToResUserDTO(User user) {
         ResUserDTO resUserDTO = new ResUserDTO();
 
@@ -91,6 +118,7 @@ public class UserService {
         return resUserDTO;
     }
 
+    // Convert user to response create DTO
     public ResCreateUserDTO convertUserToResCreateUserDTO(User user) {
         ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
 
@@ -105,13 +133,13 @@ public class UserService {
         return resCreateUserDTO;
     }
 
+    // Convert user to response update DTO
     public ResUpdateUserDTO convertUserToResUpdateUserDTO(User user) {
         ResUpdateUserDTO resUpdateUserDTO = new ResUpdateUserDTO();
 
         resUpdateUserDTO.setId(user.getId());
         resUpdateUserDTO.setAge(user.getAge());
         resUpdateUserDTO.setName(user.getName());
-        resUpdateUserDTO.setEmail(user.getEmail());
         resUpdateUserDTO.setAddress(user.getAddress());
         resUpdateUserDTO.setGender(user.getGender());
         resUpdateUserDTO.setUpdateAt(user.getUpdatedAt());
