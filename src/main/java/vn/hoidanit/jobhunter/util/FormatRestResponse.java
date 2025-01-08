@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import jakarta.servlet.http.HttpServletResponse;
 import vn.hoidanit.jobhunter.domain.RestResponse;
+import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 
 @ControllerAdvice
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
@@ -22,27 +23,25 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
             Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-                HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
-                int status = servletResponse.getStatus();
+        HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
+        int status = servletResponse.getStatus();
 
-                RestResponse<Object> res = new RestResponse<Object>();
-                res.setStatusCode(status);
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(status);
 
-                if (body instanceof String) {
-                    return body;
-                }
+        if (body instanceof String) {
+            return body;
+        }
 
-                if (status >= 400) {
-                    // Case Error                   
-                    res.setError("CALL API FAILED");
-                    res.setMessage(body);
-                }else {
-                    // Case success
-                    res.setData(body);
-                    res.setMessage("CALL API SUCCESS");
-                }
+        if (status >= 400) {
+            return body;
+        } else {
+            res.setData(body);
+            ApiMessage apiMessage = returnType.getMethodAnnotation(ApiMessage.class);
+            res.setMessage(apiMessage != null ? apiMessage.value() : "CALL API SUCCESS");
+        }
 
         return res;
     }
-    
+
 }
