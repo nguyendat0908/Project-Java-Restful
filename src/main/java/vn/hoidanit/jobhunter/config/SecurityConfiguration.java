@@ -32,7 +32,7 @@ public class SecurityConfiguration {
     // Lấy tham số môi trường
     @Value("${hoidanit.jwt.base64-secret}")
     private String jwtKey;
-    @Value("${hoidanit.jwt.token-validity-in-seconds}")
+    @Value("${hoidanit.jwt.access-token-validity-in-seconds}")
     private String jwtExpiration;
 
     @Bean
@@ -95,9 +95,9 @@ public class SecurityConfiguration {
 
                 // Default exception
                 // .exceptionHandling(
-                //         exceptions -> exceptions
-                //                 .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
-                //                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
+                // exceptions -> exceptions
+                // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
+                // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
 
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
