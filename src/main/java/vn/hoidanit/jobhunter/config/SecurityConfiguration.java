@@ -32,8 +32,6 @@ public class SecurityConfiguration {
     // Lấy tham số môi trường
     @Value("${hoidanit.jwt.base64-secret}")
     private String jwtKey;
-    @Value("${hoidanit.jwt.access-token-validity-in-seconds}")
-    private String jwtExpiration;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
