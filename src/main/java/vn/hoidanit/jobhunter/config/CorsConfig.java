@@ -16,22 +16,25 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Cho phép các URL nào có thể truy cập tới Backend
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:4173", "http://localhost:5173"));
+        configuration.setAllowedOrigins(
+                Arrays.asList("http://localhost:3000", "http://localhost:4173", "http://localhost:5173"));
 
         // Các method nào được kết nối
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        
+
         // Các phần Header được phép gửi lên
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "x-no-retry"));
 
         // Gửi kèm cookie hay không?
         configuration.setAllowCredentials(true);
-        
+
+        // Thời gian pre-flight request có thể cache (tính theo seconds)
         configuration.setMaxAge(3600L);
-        // How long the response from a pre-flight request can be cached by clients
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply this configuration to all paths
+
+        // Cấu hình cors cho tất cả api
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

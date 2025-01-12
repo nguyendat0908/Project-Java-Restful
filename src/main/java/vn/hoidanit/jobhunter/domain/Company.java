@@ -17,46 +17,49 @@ import lombok.Getter;
 import lombok.Setter;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
-@Entity
 @Table(name = "companies")
+@Entity
 @Getter
 @Setter
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Name không được để trống!")
+    @NotBlank(message = "Name không được để trống")
     private String name;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
 
     private String address;
+
     private String logo;
 
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
+
     private Instant updatedAt;
 
     private String createdBy;
-    private String updateBy;
+
+    private String updatedBy;
 
     @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
+
         this.createdAt = Instant.now();
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
-        this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
+
         this.updatedAt = Instant.now();
     }
-
 }

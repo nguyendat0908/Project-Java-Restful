@@ -20,36 +20,35 @@ import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 
 @Entity
 @Table(name = "users")
-@Setter
 @Getter
+@Setter
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private int age;
+    private String name;
 
-    @NotBlank(message = "email không được để trống")
+    @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @NotBlank(message = "password không được để trống")
+    @NotBlank(message = "Password không được để trống")
     private String password;
 
-    private String name;
+    private int age;
+
+    @Enumerated(EnumType.STRING)
+    private GenderEnum gender;
+
     private String address;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
 
-    private String createdBy;
-    private String updatedBy;
-
-    @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
-
     private Instant createdAt;
     private Instant updatedAt;
+    private String createdBy;
+    private String updatedBy;
 
     @PrePersist
     public void handleBeforeCreate() {
@@ -68,5 +67,4 @@ public class User {
 
         this.updatedAt = Instant.now();
     }
-
 }

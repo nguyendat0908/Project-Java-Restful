@@ -9,56 +9,52 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.Company;
-import vn.hoidanit.jobhunter.domain.DTO.ResultPaginationDTO;
-import vn.hoidanit.jobhunter.repository.CompanyRespository;
+import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
+import vn.hoidanit.jobhunter.repository.CompanyRepository;
 
 @Service
 public class CompanyService {
 
-    private final CompanyRespository companyRespository;
+    private final CompanyRepository companyRepository;
 
-    public CompanyService(CompanyRespository companyRespository) {
-        this.companyRespository = companyRespository;
+    public CompanyService(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 
-    public Company createCompany(Company company) {
-        return this.companyRespository.save(company);
+    public Company handleCreateCompany(Company c) {
+        return this.companyRepository.save(c);
     }
 
-    public ResultPaginationDTO getAllCompany(Specification<Company> spec, Pageable pageable) {
+    public ResultPaginationDTO handleGetCompany(Specification<Company> spec, Pageable pageable) {
+        Page<Company> pCompany = this.companyRepository.findAll(spec, pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
 
-        Page<Company> pageCompany = this.companyRespository.findAll(spec, pageable);
-        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
-        ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageable.getPageSize());
 
-        meta.setPage(pageable.getPageNumber() + 1);
-        meta.setPageSize(pageable.getPageSize());
+        mt.setPages(pCompany.getTotalPages());
+        mt.setTotal(pCompany.getTotalElements());
 
-        meta.setPages(pageCompany.getTotalPages());
-        meta.setTotal(pageCompany.getTotalElements());
-
-        resultPaginationDTO.setMeta(meta);
-        resultPaginationDTO.setResult(pageCompany.getContent());
-
-        return resultPaginationDTO;
+        rs.setMeta(mt);
+        rs.setResult(pCompany.getContent());
+        return rs;
     }
 
-    public Company updateCompany(Company company) {
-        Optional<Company> companyOptional = this.companyRespository.findById(company.getId());
-
+    public Company handleUpdateCompany(Company c) {
+        Optional<Company> companyOptional = this.companyRepository.findById(c.getId());
         if (companyOptional.isPresent()) {
             Company currentCompany = companyOptional.get();
-            currentCompany.setName(company.getName());
-            currentCompany.setAddress(company.getAddress());
-            currentCompany.setLogo(company.getLogo());
-            currentCompany.setDescription(company.getDescription());
-
-            return this.companyRespository.save(currentCompany);
+            currentCompany.setLogo(c.getLogo());
+            currentCompany.setName(c.getName());
+            currentCompany.setDescription(c.getDescription());
+            currentCompany.setAddress(c.getAddress());
+            return this.companyRepository.save(currentCompany);
         }
         return null;
     }
 
-    public void deleteCompany(long id) {
-        this.companyRespository.deleteById(id);
+    public void handleDeleteCompany(long id) {
+        this.companyRepository.deleteById(id);
     }
 }

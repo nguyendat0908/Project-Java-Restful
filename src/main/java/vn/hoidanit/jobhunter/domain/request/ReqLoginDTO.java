@@ -1,13 +1,12 @@
-package vn.hoidanit.jobhunter.domain.DTO;
+package vn.hoidanit.jobhunter.domain.request;
 
 import jakarta.validation.constraints.NotBlank;
 
 public class ReqLoginDTO {
-
-    @NotBlank(message = "Username không được để trống!")
+    @NotBlank(message = "Username không được để trống")
     private String username;
 
-    @NotBlank(message = "Password không được để trống!")
+    @NotBlank(message = "Password không được để trống")
     private String password;
 
     public String getUsername() {
@@ -25,4 +24,5 @@ public class ReqLoginDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
