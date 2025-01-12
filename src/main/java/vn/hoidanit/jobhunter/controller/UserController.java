@@ -41,18 +41,18 @@ public class UserController {
 
     @PostMapping("/users")
     @ApiMessage("Create a new user")
-    public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser)
+    public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User user)
             throws IdInvalidException {
-        boolean isEmailExist = this.userService.isEmailExist(postManUser.getEmail());
+        boolean isEmailExist = this.userService.isEmailExist(user.getEmail());
         if (isEmailExist) {
             throw new IdInvalidException(
-                    "Email " + postManUser.getEmail() + "đã tồn tại, vui lòng sử dụng email khác.");
+                    "Email " + user.getEmail() + "đã tồn tại, vui lòng sử dụng email khác.");
         }
 
-        String hashPassword = this.passwordEncoder.encode(postManUser.getPassword());
-        postManUser.setPassword(hashPassword);
-        User ericUser = this.userService.handleCreateUser(postManUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(ericUser));
+        String hashPassword = this.passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashPassword);
+        User newUser = this.userService.handleCreateUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(newUser));
     }
 
     @DeleteMapping("/users/{id}")
