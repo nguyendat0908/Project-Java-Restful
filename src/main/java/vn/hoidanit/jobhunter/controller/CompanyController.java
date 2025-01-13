@@ -32,9 +32,9 @@ public class CompanyController {
     }
 
     @PostMapping("/companies")
-    public ResponseEntity<?> createCompany(@Valid @RequestBody Company reqCompany) {
+    public ResponseEntity<?> createCompany(@Valid @RequestBody Company company) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.companyService.handleCreateCompany(reqCompany));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.companyService.handleCreateCompany(company));
     }
 
     @GetMapping("/companies")
@@ -46,8 +46,8 @@ public class CompanyController {
     }
 
     @PutMapping("/companies")
-    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company reqCompany) {
-        Company updatedCompany = this.companyService.handleUpdateCompany(reqCompany);
+    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company) {
+        Company updatedCompany = this.companyService.handleUpdateCompany(company);
         return ResponseEntity.ok(updatedCompany);
     }
 
