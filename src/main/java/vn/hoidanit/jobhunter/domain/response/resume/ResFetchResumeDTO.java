@@ -23,6 +23,7 @@ public class ResFetchResumeDTO {
     private Instant createdAt;
     private Instant updatedAt;
 
+    private String companyName;
     private String createdBy;
     private String updatedBy;
 
