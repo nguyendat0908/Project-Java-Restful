@@ -38,7 +38,7 @@ public class JobService {
         if (job.getSkills() != null) {
             List<Long> reqSkills = job.getSkills().stream().map(x -> x.getId()).collect(Collectors.toList());
 
-            List<Skill> skills = this.skillRepository.findAllByIdIn(reqSkills);
+            List<Skill> skills = this.skillRepository.findByIdIn(reqSkills);
             job.setSkills(skills);
         }
 
@@ -70,7 +70,7 @@ public class JobService {
         if (job.getSkills() != null) {
             List<Long> reqSkills = job.getSkills().stream().map(x -> x.getId()).collect(Collectors.toList());
 
-            List<Skill> skills = this.skillRepository.findAllByIdIn(reqSkills);
+            List<Skill> skills = this.skillRepository.findByIdIn(reqSkills);
             job.setSkills(skills);
         }
 
