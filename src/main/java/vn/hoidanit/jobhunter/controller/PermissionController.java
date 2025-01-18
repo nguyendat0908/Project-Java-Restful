@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/v1")
@@ -67,11 +67,22 @@ public class PermissionController {
         return ResponseEntity.ok().body(newPermission);
     }
 
-   @GetMapping("/permissions")
+    @GetMapping("/permissions")
     @ApiMessage("Fetch all permissions!")
-    public ResponseEntity<ResultPaginationDTO> getAllPermissions(@Filter Specification<Permission> spec, Pageable pageable) {
+    public ResponseEntity<ResultPaginationDTO> getAllPermissions(@Filter Specification<Permission> spec,
+            Pageable pageable) {
         return ResponseEntity.ok(this.permissionService.fetchAllPermission(spec, pageable));
     }
-    
+
+    @DeleteMapping("/permissions/{id}")
+    @ApiMessage("Delete a permission")
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) throws IdInvalidException {
+        // check exist by id
+        if (this.permissionService.getPermissionById(id) == null) {
+            throw new IdInvalidException("Permission với id = " + id + " không tồn tại.");
+        }
+        this.permissionService.handleDeletePermission(id);
+        return ResponseEntity.ok().body(null);
+    }
 
 }
