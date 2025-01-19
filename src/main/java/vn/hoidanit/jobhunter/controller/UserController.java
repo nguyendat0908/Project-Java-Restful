@@ -46,7 +46,7 @@ public class UserController {
         boolean isEmailExist = this.userService.isEmailExist(user.getEmail());
         if (isEmailExist) {
             throw new IdInvalidException(
-                    "Email " + user.getEmail() + "đã tồn tại, vui lòng sử dụng email khác.");
+                    "Email " + user.getEmail() + " đã tồn tại, vui lòng sử dụng email khác.");
         }
 
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
