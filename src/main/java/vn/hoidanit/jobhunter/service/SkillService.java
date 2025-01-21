@@ -13,7 +13,7 @@ import vn.hoidanit.jobhunter.repository.SkillRepository;
 
 @Service
 public class SkillService {
-    
+
     private final SkillRepository skillRepository;
 
     public SkillService(SkillRepository skillRepository) {
@@ -24,7 +24,7 @@ public class SkillService {
         Optional<Skill> skillOptional = this.skillRepository.findById(id);
         if (skillOptional.isPresent()) {
             return skillOptional.get();
-        } 
+        }
         return null;
     }
 
@@ -36,7 +36,7 @@ public class SkillService {
         return this.skillRepository.save(skill);
     }
 
-    public Skill handleUpdateSkill (Skill skill){
+    public Skill handleUpdateSkill(Skill skill) {
         Skill currentSkill = this.findById(skill.getId());
 
         if (currentSkill != null) {
@@ -70,6 +70,9 @@ public class SkillService {
         Optional<Skill> skillOptional = this.skillRepository.findById(id);
         Skill currentSkill = skillOptional.get();
         currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+
+        // Delete subscriber (inside subscriber_skill table) which has this skill
+        currentSkill.getSubscribers().forEach(job -> job.getSkills().remove(currentSkill));
 
         // Delete skill
         this.skillRepository.deleteById(id);
