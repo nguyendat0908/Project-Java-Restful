@@ -14,7 +14,6 @@ import vn.hoidanit.jobhunter.domain.Role;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
-import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 import vn.hoidanit.jobhunter.util.error.PermissionException;
 
 /**
@@ -56,7 +55,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         // Check permission
         String email = SecurityUtil.getCurrentUserLogin().isPresent() == true ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        if (email != null && email.isEmpty()) {
+        if (email != null && !email.isEmpty()) {
             User user = this.userService.handleGetUserByUsername(email);
             if (user != null) {
                 Role role = user.getRole();
