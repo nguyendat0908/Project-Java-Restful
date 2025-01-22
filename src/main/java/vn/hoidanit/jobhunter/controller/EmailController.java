@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.hoidanit.jobhunter.service.EmailService;
+import vn.hoidanit.jobhunter.service.SubscriberService;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class EmailController {
 
     private EmailService emailService;
+    private SubscriberService subscriberService;
 
-    public EmailController(EmailService emailService) {
+    public EmailController(EmailService emailService, SubscriberService subscriberService) {
         this.emailService = emailService;
+        this.subscriberService = subscriberService;
     }
 
     @GetMapping("/email")
@@ -27,9 +30,9 @@ public class EmailController {
         // "<h1><b>Hello</b></h1>", false,
         // true);
 
-        this.emailService.sendEmailFromTemplateSync("datleo090803@gmail.com", "Test send email", "job");
+        this.subscriberService.sendSubscribersEmailJobs();
 
-        return "Hello!";
+        return "Successful!";
     }
 
 }
