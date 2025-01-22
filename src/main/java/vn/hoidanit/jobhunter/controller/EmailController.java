@@ -22,7 +22,13 @@ public class EmailController {
     @ApiMessage("Send simple email")
     public String sendSimpleEmail() {
 
-        this.emailService.sendSimpleEmail();
+        // this.emailService.sendSimpleEmail();
+        // this.emailService.sendEmailSync("datleo090803@gmail.com", "Test send email",
+        // "<h1><b>Hello</b></h1>", false,
+        // true);
+
+        this.emailService.sendEmailFromTemplateSync("datleo090803@gmail.com", "Test send email", "job");
+
         return "Hello!";
     }
 
